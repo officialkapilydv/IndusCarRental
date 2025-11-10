@@ -1,5 +1,5 @@
 {
-  "homepage": "https://<officialkapilydv>.github.io/<IndusCarRental>",
+  "homepage": "https://officialkapilydv.github.io/IndusCarRental",
   "name": "cab-rental-reactjs",
   "version": "1.0.0",
   "private": true,
@@ -16,7 +16,7 @@
     "start": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",
