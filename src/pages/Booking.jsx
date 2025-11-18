@@ -94,11 +94,11 @@ export default function Booking() {
       {/* Header */}
       <div className="bg-white border-b">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <Link to="/" className="bg-sky-600 text-white px-3 py-1 rounded-md font-bold">
+          <Link to="/" className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold">
             Indus Car Rental
           </Link>
           <div className="flex items-center gap-2">
-            <button className="bg-sky-100 text-sky-700 rounded-full px-3 py-1 text-sm">
+            <button className="bg-purple-100 text-purple-700 rounded-full px-3 py-1 text-sm">
               Login
             </button>
           </div>
@@ -163,7 +163,7 @@ function StepContact({ onNext }) {
         <Field label="NAME">
           <input
             placeholder="Enter your name"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-600 outline-none"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
         </Field>
 
@@ -171,7 +171,7 @@ function StepContact({ onNext }) {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-600 outline-none"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
         </Field>
 
@@ -182,7 +182,7 @@ function StepContact({ onNext }) {
             </select>
             <input
               placeholder="Enter phone number"
-              className="flex-1 border rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-600 outline-none"
+              className="flex-1 border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
             />
           </div>
         </Field>
@@ -190,20 +190,20 @@ function StepContact({ onNext }) {
         <Field label="PICKUP">
           <input
             placeholder="Enter pickup location"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-600 outline-none"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
         </Field>
 
         <Field label="DROP">
           <input
             placeholder="Enter drop location"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-600 outline-none"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
         </Field>
 
         <button
           onClick={onNext}
-          className="w-full bg-[#f16529] hover:bg-[#e05b22] text-white font-semibold rounded-md py-3"
+          className="w-full bg-[#9333ea] hover:bg-[#7e22ce] text-white font-semibold rounded-md py-3"
         >
           PROCEED
         </button>
@@ -328,7 +328,7 @@ function StepServices({ onBack, onNext, baseFare, setTotalFare, setSelectedServi
         </button>
         <button
           onClick={onNext}
-          className="px-6 py-2 bg-[#f16529] hover:bg-[#e05b22] text-white rounded-md"
+          className="px-6 py-2 bg-[#9333ea] hover:bg-[#7e22ce] text-white rounded-md"
         >
           PROCEED
         </button>
@@ -361,7 +361,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
     <>
       <div className="text-center text-lg font-semibold mb-4">PAYMENT DETAILS</div>
 
-      <div className="border rounded-md p-4 mb-4 bg-sky-50">
+      <div className="border rounded-md p-4 mb-4 bg-purple-50">
         <div className="font-semibold text-slate-700 mb-2">Fare Breakdown</div>
         <div className="text-sm space-y-1">
           <div className="flex justify-between"><span>Base Fare</span><span>₹{baseFare}</span></div>
@@ -372,7 +372,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
             </div>
           ))}
           <hr className="my-2 border-slate-300" />
-          <div className="flex justify-between font-semibold text-sky-700">
+          <div className="flex justify-between font-semibold text-purple-700">
             <span>Total Fare</span><span>₹{animatedFare.toLocaleString("en-IN")}</span>
           </div>
         </div>
@@ -384,7 +384,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
             key={o.v}
             onClick={() => setPayNow(o.v)}
             className={`flex-1 border rounded-md py-3 text-center whitespace-pre ${
-              payNow === o.v ? "bg-sky-600 text-white" : "bg-white text-slate-700"
+              payNow === o.v ? "bg-purple-600 text-white" : "bg-white text-slate-700"
             }`}
           >
             {o.label}
@@ -394,7 +394,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
 
       <div className="border rounded-md flex items-center justify-between px-3 py-2 text-sm">
         <input className="flex-1 outline-none" placeholder="Coupon Code" />
-        <button className="text-sky-700 font-semibold">Apply</button>
+        <button className="text-purple-700 font-semibold">Apply</button>
       </div>
 
       <div className="mt-4">
@@ -418,7 +418,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
 
       <div className="flex justify-between mt-6">
         <button onClick={onBack} className="px-4 py-2 text-sm bg-slate-100 rounded hover:bg-slate-200">⟵ Back</button>
-        <button onClick={onBook} className="px-6 py-2 bg-[#f16529] hover:bg-[#e05b22] text-white rounded-md">BOOK NOW</button>
+        <button onClick={onBook} className="px-6 py-2 bg-[#9333ea] hover:bg-[#7e22ce] text-white rounded-md">BOOK NOW</button>
       </div>
     </>
   );
@@ -432,7 +432,7 @@ function RightSummary({ q, routeTitle, baseFare, totalFare, selectedServices, ac
 
   return (
     <div className="bg-white rounded-xl border shadow-sm relative">
-      <div className="px-6 py-3 bg-sky-600 text-white font-semibold rounded-t-xl">
+      <div className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-t-xl">
         YOUR BOOKING DETAILS
       </div>
       <div className="px-6 py-4 text-sm space-y-2">
@@ -459,7 +459,7 @@ function RightSummary({ q, routeTitle, baseFare, totalFare, selectedServices, ac
         )}
 
         <hr className="my-2 border-slate-300" />
-        <div className="relative flex justify-between font-semibold text-sky-700">
+        <div className="relative flex justify-between font-semibold text-purple-700">
           <span>Total Fare</span>
           <span className="relative">
             ₹{animatedFare.toLocaleString("en-IN")}
@@ -518,7 +518,7 @@ function TabButton({ id, label, activeTab, setActiveTab }) {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex-1 py-2 border-b ${
-        active ? "text-sky-700 border-sky-700 bg-sky-50" : "text-slate-500"
+        active ? "text-purple-700 border-purple-700 bg-purple-50" : "text-slate-500"
       }`}
     >
       {label}

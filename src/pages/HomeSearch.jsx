@@ -41,7 +41,7 @@ function Button({ className = "", disabled, children, ...props }) {
     <button
       disabled={disabled}
       className={`inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold transition
-      ${disabled ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-[#f16529] hover:bg-[#e05b22] text-white"} ${className}`}
+      ${disabled ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-[#9333ea] hover:bg-[#7e22ce] text-white"} ${className}`}
       {...props}
     >
       {children}
@@ -98,7 +98,7 @@ export default function HomeSearch() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white text-slate-800">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-white text-slate-800">
       <TopBar />
 
       {/* ===== HERO + SEARCH ===== */}
@@ -113,7 +113,7 @@ export default function HomeSearch() {
         <div className="mx-auto max-w-7xl px-4 pt-12 pb-16 relative z-10">
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
                      className="text-3xl md:text-5xl font-extrabold text-center text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-            SERVICES ACROSS <span className="text-sky-300">20+ CITIES</span>
+            SERVICES ACROSS <span className="text-purple-300">20+ CITIES</span>
           </motion.h1>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}
@@ -122,7 +122,7 @@ export default function HomeSearch() {
               {tiers.map((t) => (
                 <button key={t.key} onClick={() => setTab(t.key)}
                         className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold border transition ${
-                          tab === t.key ? "bg-sky-600 text-white border-sky-600" : "bg-white hover:bg-slate-50 border-slate-200"
+                          tab === t.key ? "bg-purple-600 text-white border-purple-600" : "bg-white hover:bg-slate-50 border-slate-200"
                         }`}>
                   {t.icon}{t.label}
                 </button>
@@ -161,7 +161,7 @@ export default function HomeSearch() {
                   <Field label="TRIP" className="md:col-span-3">
                     <div className="relative">
                       <select value={airportTripType} onChange={(e) => setAirportTripType(e.target.value)}
-                              className="w-full rounded-lg border px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-sky-600">
+                              className="w-full rounded-lg border px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-600">
                         <option value="drop">Drop to Airport</option>
                         <option value="pickup">Pickup from Airport</option>
                       </select>
@@ -169,11 +169,11 @@ export default function HomeSearch() {
                     </div>
                   </Field>
                   <Field label="PICKUP ADDRESS" className="md:col-span-3">
-                    <input className="w-full rounded-lg border pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-600"
+                    <input className="w-full rounded-lg border pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
                            placeholder="Enter Pickup Location" value={pickupAddress} onChange={(e)=>setPickupAddress(e.target.value)} />
                   </Field>
                   <Field label={airportTripType === "drop" ? "DROP AIRPORT" : "PICKUP AIRPORT"} className="md:col-span-3">
-                    <input className="w-full rounded-lg border pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-600"
+                    <input className="w-full rounded-lg border pl-3 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
                            placeholder="Start typing airport name or city" value={airportName} onChange={(e)=>setAirportName(e.target.value)} />
                   </Field>
                   <Field label="PICK UP DATE" className="md:col-span-2"><DateInput value={date} onChange={setDate} /></Field>
@@ -191,7 +191,7 @@ export default function HomeSearch() {
 
       {/* ===== Why us ===== */}
       <section id="why" className="mx-auto max-w-7xl px-4 py-12">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-center text-sky-700">WHAT SETS INDUS CAR APART?</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-center text-purple-700">WHAT SETS INDUS CAR APART?</h2>
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Feature icon={<ShieldCheck className="h-6 w-6" />} title="Clean & Hygienic" subtitle="Cars" />
           <Feature icon={<BadgeCheck className="h-6 w-6" />} title="Transparent" subtitle="Billing" />
@@ -206,7 +206,7 @@ export default function HomeSearch() {
       {/* ===== Story block ===== */}
       <section id="story" className="mx-auto max-w-7xl px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
         <div>
-          <h3 className="text-2xl font-bold text-sky-700">India's Largest Intercity and Local Cab Services</h3>
+          <h3 className="text-2xl font-bold text-purple-700">India's Largest Intercity and Local Cab Services</h3>
           <p className="mt-3 text-slate-600">
             We are India's leading chauffeur-driven car rental company, offering premium travel experiences across 20+ cities nationwide.
             Our services span Intercity Travel — including One-Way and Round-Trip journeys — Local Rentals, and Airport Transfers, ensuring comfort and convenience wherever you go.
@@ -236,9 +236,9 @@ export default function HomeSearch() {
               />
             </div>
             <div className="order-1 md:order-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-sky-700">Exploring India, one road trip at a time</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-purple-700">Exploring India, one road trip at a time</h3>
               <p className="mt-4 text-slate-600">
-                To us, a road trip is one of the most exhilarating ways to travel the length and breadth of India. There's always something to look at, something to explore and to experience. Because we love travelling by road so much, we've been striving to make sure you have a great experience too. We wanted more of you to go on a road trip, and more of you to experience the same joys of travel that we do. Instead of driving, why not sit back and take our <span className="font-semibold text-slate-800">chauffeur driven cabs</span> on your next vacation? We believe that the time you spend on your vacation should be entirely yours. So now, we are in <span className="font-semibold text-sky-700">20+ cities across India</span> - to help you travel to wherever your heart desires.
+                To us, a road trip is one of the most exhilarating ways to travel the length and breadth of India. There's always something to look at, something to explore and to experience. Because we love travelling by road so much, we've been striving to make sure you have a great experience too. We wanted more of you to go on a road trip, and more of you to experience the same joys of travel that we do. Instead of driving, why not sit back and take our <span className="font-semibold text-slate-800">chauffeur driven cabs</span> on your next vacation? We believe that the time you spend on your vacation should be entirely yours. So now, we are in <span className="font-semibold text-purple-700">20+ cities across India</span> - to help you travel to wherever your heart desires.
               </p>
               <p className="mt-3 text-slate-600">
                 We love that you're free to stop to breathe in clean air, learn about cultures and taste local food when you travel by cabs. We love that these wholesome experiences make travelling better and enrich our lives. We live for the surprises we find on road trips.
@@ -247,7 +247,7 @@ export default function HomeSearch() {
                 No city is too big or too small. We know travellers and wanderers like us are everywhere. You live near Khajuraho, you live near Aleppey, and you live near Alibag and near Tranquebar. We want you to visit them all. Pack your bags every weekend and explore everything there is to see around you.
               </p>
               <p className="mt-3 text-slate-600">
-                To make planning your vacation easier, you can book a cab with ease on our website, or call us on <a href="tel:01244200022" className="text-sky-700 font-semibold hover:underline">0124-4200022</a> if you'd like to discuss your itinerary with our executives in detail. When you book an outstation cab with us, we'll send you a travel kit and help you plan your itinerary. We also have a handy cab booking app that will further reduce the hassles of booking a trip with us. Our expert drivers will guide you through some of the best experiences India has to offer. From the time you make a booking with us, to the time you get back home, we'll make sure you have a great road trip.
+                To make planning your vacation easier, you can book a cab with ease on our website, or call us on <a href="tel:01244200022" className="text-purple-700 font-semibold hover:underline">0124-4200022</a> if you'd like to discuss your itinerary with our executives in detail. When you book an outstation cab with us, we'll send you a travel kit and help you plan your itinerary. We also have a handy cab booking app that will further reduce the hassles of booking a trip with us. Our expert drivers will guide you through some of the best experiences India has to offer. From the time you make a booking with us, to the time you get back home, we'll make sure you have a great road trip.
               </p>
             </div>
           </div>
@@ -256,7 +256,7 @@ export default function HomeSearch() {
 
       {/* ===== No Matter Where Section ===== */}
       <section className="mx-auto max-w-7xl px-4 py-12">
-        <h3 className="text-2xl md:text-3xl font-bold text-center text-sky-700">No matter where you travel - we've got a cab for you</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-center text-purple-700">No matter where you travel - we've got a cab for you</h3>
         <div className="mt-8 space-y-4 text-slate-600 max-w-5xl mx-auto">
           <p>
             Planning a weekend getaway? Our outstation cab services will help you explore the best destinations, visit all the must-see places and taste the best local food. Did you just land at an airport or railway station closest to your destination? No problem! You can use our airport taxi, the transit pick up service to cover the last mile. We'll get you to your destination and show you some of the best sights along the way. Planning on traveling home for a family get-together? Try our newly introduced one-way cab services - no matter where you live, get dropped to your hometown by paying only one-side fare. Decided to take a personal day and spend the whole day exploring your city? Our local taxi packages will help you explore the best places to eat and drink at, some of the city's majestic monuments, greenest parks and oldest temples. You'll never have to worry about an empty travel itinerary again. Are you an offbeat traveller? Do you just hit the road and decide to take it from there? We offer one-way drops on several routes, in case you only want to be dropped to a destination and don't want to look back.
@@ -277,14 +277,14 @@ function TopBar() {
     <header className="sticky top-0 z-30 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="bg-sky-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
+          <div className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
           <span className="hidden md:inline text-xs text-slate-500">India's top rated cab service</span>
         </div>
         <nav className="hidden md:flex items-center gap-6 text-sm">
-          <a className="hover:text-sky-700 cursor-pointer" href="#services">Services</a>
-          <a className="hover:text-sky-700 cursor-pointer" href="#why">Why us</a>
-          <button onClick={() => navigate("/about")} className="hover:text-sky-700">About</button>
-          <button onClick={() => navigate("/contact")} className="hover:text-sky-700">Contact</button>
+          <a className="hover:text-purple-700 cursor-pointer" href="#services">Services</a>
+          <a className="hover:text-purple-700 cursor-pointer" href="#why">Why us</a>
+          <button onClick={() => navigate("/about")} className="hover:text-purple-700">About</button>
+          <button onClick={() => navigate("/contact")} className="hover:text-purple-700">Contact</button>
         </nav>
       </div>
     </header>
@@ -303,7 +303,7 @@ function Field({ label, children, className = "" }) {
 function DateInput({ value, onChange, min }) {
   return (
     <div className="relative">
-      <input type="date" className="w-full rounded-lg border p-2 pr-9 focus:outline-none focus:ring-2 focus:ring-sky-600"
+      <input type="date" className="w-full rounded-lg border p-2 pr-9 focus:outline-none focus:ring-2 focus:ring-purple-600"
              value={value} min={min || todayISO()} onChange={(e) => onChange(e.target.value)} />
       <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
     </div>
@@ -313,7 +313,7 @@ function DateInput({ value, onChange, min }) {
 function TimeInput({ value, onChange }) {
   return (
     <div className="relative">
-      <input type="time" className="w-full rounded-lg border p-2 pr-9 focus:outline-none focus:ring-2 focus:ring-sky-600"
+      <input type="time" className="w-full rounded-lg border p-2 pr-9 focus:outline-none focus:ring-2 focus:ring-purple-600"
              value={value} onChange={(e) => onChange(e.target.value)} />
       <Clock3 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
     </div>
@@ -338,7 +338,7 @@ function CitySelect({ value, onChange }) {
     <div className="relative">
       <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><MapPin className="h-4 w-4" /></div>
       <input
-        className="w-full rounded-lg border pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-600"
+        className="w-full rounded-lg border pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
         placeholder="Search city" value={q || ""}
         onFocus={() => setOpen(true)}
         onChange={(e) => { setQ(e.target.value); setOpen(true); }}
@@ -362,7 +362,7 @@ function Feature({ icon, title, subtitle }) {
   return (
     <Card className="border-slate-200">
       <CardContent className="flex flex-col items-center gap-2 py-6">
-        <div className="rounded-full border p-3 text-sky-700 bg-sky-50">{icon}</div>
+        <div className="rounded-full border p-3 text-purple-700 bg-purple-50">{icon}</div>
         <div className="text-sm font-bold text-slate-800">{title}</div>
         <div className="text-xs text-slate-500">{subtitle}</div>
       </CardContent>
@@ -391,7 +391,7 @@ function OurServices() {
   ];
   return (
     <section id="services" className="mx-auto max-w-7xl px-4 pb-6">
-      <h2 className="text-2xl md:text-3xl font-extrabold text-center text-sky-700">OUR SERVICES</h2>
+      <h2 className="text-2xl md:text-3xl font-extrabold text-center text-purple-700">OUR SERVICES</h2>
       <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (<ServiceCard key={c.title} {...c} />))}
       </div>
@@ -420,15 +420,15 @@ function Footer() {
   const navigate = useNavigate();
   
   return (
-    <footer id="contact" className="bg-sky-700 text-white mt-8">
+    <footer id="contact" className="bg-purple-700 text-white mt-8">
       <div className="mx-auto max-w-7xl px-4 py-12 grid sm:grid-cols-4 gap-8">
         <div>
           <div className="text-lg font-bold">Indus Car Rental</div>
-          <p className="mt-2 text-sm text-sky-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
+          <p className="mt-2 text-sm text-purple-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
         </div>
         <div>
           <div className="font-semibold">Company</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => navigate("/about")} className="hover:text-white">About Us</button></li>
             <li>Careers</li>
             <li><button onClick={() => navigate("/privacy-policy")} className="hover:text-white">Privacy Policy</button></li>
@@ -437,13 +437,13 @@ function Footer() {
         </div>
         <div>
           <div className="font-semibold">Services</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => navigate("/tempo-traveller")} className="hover:text-white">Tempo Travellers & Minibuses</button></li>
           </ul>
         </div>
         <div>
           <div className="font-semibold">Get in touch</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => navigate("/contact")} className="hover:text-white">Contact</button></li>
             <li>Travel Agent</li>
             

@@ -15,11 +15,11 @@ export default function PrivacyPolicy() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white text-slate-800">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-white text-slate-800">
       <TopBar onLogoClick={() => navigate("/")} />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-sky-600 to-sky-800 text-white">
+      <section className="relative bg-gradient-to-r from-purple-600 to-purple-800 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }} 
@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
           >
             <Shield className="h-16 w-16 mx-auto mb-4" />
             <h1 className="text-3xl md:text-5xl font-extrabold">PRIVACY POLICY</h1>
-            <p className="mt-4 text-lg text-sky-100 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg text-purple-100 max-w-3xl mx-auto">
               Your privacy is important to us. Learn how we protect your information.
             </p>
           </motion.div>
@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
             <CardContent className="p-8 space-y-8">
               {/* Introduction */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
                   <FileText className="h-6 w-6" />
                   Introduction
                 </h2>
@@ -66,7 +66,7 @@ export default function PrivacyPolicy() {
 
               {/* Information We Collect */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
                   <Eye className="h-6 w-6" />
                   Information We Collect
                 </h2>
@@ -116,7 +116,7 @@ export default function PrivacyPolicy() {
 
               {/* Security */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
                   <Lock className="h-6 w-6" />
                   Security
                 </h2>
@@ -129,7 +129,7 @@ export default function PrivacyPolicy() {
 
               {/* How We Use Cookies */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4">How We Use Cookies</h2>
+                <h2 className="text-2xl font-bold text-purple-700 mb-4">How We Use Cookies</h2>
                 <p className="text-slate-600 leading-relaxed mb-4">
                   A cookie is a small file which asks permission to be placed on your computer's hard drive. Once you agree, the file is added and the cookie helps analyze web traffic or lets you know when you visit a particular site. Cookies allow web applications to respond to you as an individual. The web application can tailor its operations to your needs, likes and dislikes by gathering and remembering information about your preferences.
                 </p>
@@ -148,7 +148,7 @@ export default function PrivacyPolicy() {
 
               {/* Links to Other Websites */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4">Links to Other Websites</h2>
+                <h2 className="text-2xl font-bold text-purple-700 mb-4">Links to Other Websites</h2>
                 <p className="text-slate-600 leading-relaxed">
                   Our website may contain links to other websites of interest. However, once you have used these links to leave our site, you should note that we do not have any control over that other website. Therefore, we cannot be responsible for the protection and privacy of any information which you provide whilst visiting such sites and such sites are not governed by this privacy statement. You should exercise caution and look at the privacy statement applicable to the website in question.
                 </p>
@@ -158,7 +158,7 @@ export default function PrivacyPolicy() {
 
               {/* Data Sharing */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4">Data Sharing</h2>
+                <h2 className="text-2xl font-bold text-purple-700 mb-4">Data Sharing</h2>
                 <p className="text-slate-600 leading-relaxed">
                   We will not sell, distribute or lease your personal information to third parties unless we have your permission or are required by law to do so. We may use your personal information to send you promotional information about third parties which we think you may find interesting if you tell us that you wish this to happen.
                 </p>
@@ -168,7 +168,7 @@ export default function PrivacyPolicy() {
 
               {/* Account Deletion */}
               <div>
-                <h2 className="text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
                   <UserX className="h-6 w-6" />
                   Account Deletion
                 </h2>
@@ -192,14 +192,14 @@ export default function PrivacyPolicy() {
               <hr className="border-slate-200" />
 
               {/* Contact */}
-              <div className="bg-sky-50 p-6 rounded-lg">
-                <h2 className="text-2xl font-bold text-sky-700 mb-4">Contacting Us</h2>
+              <div className="bg-purple-50 p-6 rounded-lg">
+                <h2 className="text-2xl font-bold text-purple-700 mb-4">Contacting Us</h2>
                 <p className="text-slate-600 leading-relaxed mb-4">
                   If there are any questions regarding this privacy policy you may contact us using the information on the Contact Us page.
                 </p>
                 <button
                   onClick={() => navigate("/contact")}
-                  className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition"
                 >
                   Contact Us
                 </button>
@@ -229,13 +229,13 @@ function TopBar({ onLogoClick }) {
     <header className="sticky top-0 z-30 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <button onClick={onLogoClick} className="flex items-center gap-2">
-          <div className="bg-sky-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
+          <div className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
           <span className="hidden md:inline text-xs text-slate-500">India's top rated cab service</span>
         </button>
         <nav className="flex items-center gap-6 text-sm">
-          <button onClick={onLogoClick} className="hover:text-sky-700">Home</button>
-          <button onClick={() => navigate("/about")} className="hover:text-sky-700">About</button>
-          <button onClick={() => navigate("/contact")} className="hover:text-sky-700">Contact</button>
+          <button onClick={onLogoClick} className="hover:text-purple-700">Home</button>
+          <button onClick={() => navigate("/about")} className="hover:text-purple-700">About</button>
+          <button onClick={() => navigate("/contact")} className="hover:text-purple-700">Contact</button>
         </nav>
       </div>
     </header>
@@ -244,15 +244,15 @@ function TopBar({ onLogoClick }) {
 
 function Footer({ onNavigate }) {
   return (
-    <footer className="bg-sky-700 text-white mt-8">
+    <footer className="bg-purple-700 text-white mt-8">
       <div className="mx-auto max-w-7xl px-4 py-12 grid sm:grid-cols-4 gap-8">
         <div>
           <div className="text-lg font-bold">Indus Car Rental</div>
-          <p className="mt-2 text-sm text-sky-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
+          <p className="mt-2 text-sm text-purple-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
         </div>
         <div>
           <div className="font-semibold">Company</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => onNavigate("/about")} className="hover:text-white">About Us</button></li>
             <li>Careers</li>
             <li><button onClick={() => onNavigate("/privacy-policy")} className="hover:text-white">Privacy Policy</button></li>
@@ -261,7 +261,7 @@ function Footer({ onNavigate }) {
         </div>
         <div>
           <div className="font-semibold">Get in touch</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => onNavigate("/contact")} className="hover:text-white">Contact</button></li>
             <li>Travel Agent</li>
             

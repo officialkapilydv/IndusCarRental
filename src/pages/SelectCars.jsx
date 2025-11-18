@@ -79,11 +79,11 @@ export default function SelectCars() {
       {/* Topbar */}
       <div className="bg-white border-b">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <Link to="/" className="bg-sky-600 text-white px-3 py-1 rounded-md font-bold">
+          <Link to="/" className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold">
             Indus Car Rental
           </Link>
           <div className="flex items-center gap-2">
-            <button className="bg-sky-100 text-sky-700 rounded-full px-3 py-1 text-sm">Login</button>
+            <button className="bg-purple-100 text-purple-700 rounded-full px-3 py-1 text-sm">Login</button>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ export default function SelectCars() {
 
       {/* summary strip */}
       <div className="mx-auto max-w-7xl px-4 mt-3">
-        <div className="bg-sky-50 border rounded-xl p-4 flex items-center justify-between">
+        <div className="bg-purple-50 border rounded-xl p-4 flex items-center justify-between">
           <div className="grid grid-cols-3 gap-6 text-sm">
             <div>
               <div className="text-slate-500">Trip Type</div>
@@ -111,7 +111,7 @@ export default function SelectCars() {
           </div>
           <Link
             to={{ pathname: "/", search }}
-            className="text-sky-700 text-sm font-semibold bg-white border rounded-full px-3 py-1 hover:bg-sky-100"
+            className="text-purple-700 text-sm font-semibold bg-white border rounded-full px-3 py-1 hover:bg-purple-100"
           >
             Modify Booking
           </Link>
@@ -120,7 +120,7 @@ export default function SelectCars() {
 
       {/* banner */}
       <div className="mx-auto max-w-7xl px-4 mt-4">
-        <div className="bg-sky-600 text-white rounded-md px-6 py-3 text-sm grid sm:grid-cols-3 gap-3">
+        <div className="bg-purple-600 text-white rounded-md px-6 py-3 text-sm grid sm:grid-cols-3 gap-3">
           <div>₹ Book Now at Zero Cost</div>
           <div>🛟 Free Cancellations Upto 1 Hour</div>
           <div>📞 24x7 Customer Support</div>
@@ -151,7 +151,7 @@ export default function SelectCars() {
                   ))}
                 </ul>
                 <div className="mt-2">
-                  <button className="text-sky-700 text-sm">Inclusions and Exclusions ▾</button>
+                  <button className="text-purple-700 text-sm">Inclusions and Exclusions ▾</button>
                 </div>
               </div>
 
@@ -159,14 +159,14 @@ export default function SelectCars() {
                 <div className="text-emerald-600 text-xs font-semibold">
                   {car.discount} <span className="line-through text-slate-400">₹{car.strike}</span>
                 </div>
-                <div className="text-3xl font-extrabold text-sky-700 leading-tight">
+                <div className="text-3xl font-extrabold text-purple-700 leading-tight">
                   ₹{car.price.toLocaleString("en-IN")}
                 </div>
                 <div className="text-xs text-slate-500">{car.extra}</div>
 
                 {/* ⬇️ navigate to /booking with all params + car details */}
                 <button
-                  className="mt-3 bg-[#f16529] hover:bg-[#e05b22] text-white font-semibold px-4 py-2 rounded-md w-full"
+                  className="mt-3 bg-[#9333ea] hover:bg-[#7e22ce] text-white font-semibold px-4 py-2 rounded-md w-full"
                   onClick={() => goToBooking(car)}
                 >
                   SELECT CAR
@@ -175,7 +175,7 @@ export default function SelectCars() {
             </div>
 
             {car.ribbons?.map((r, i) => (
-              <div key={i} className="text-sky-800 bg-sky-50 border-t px-4 py-2 text-xs rounded-b-xl">
+              <div key={i} className="text-purple-800 bg-purple-50 border-t px-4 py-2 text-xs rounded-b-xl">
                 {r}
               </div>
             ))}

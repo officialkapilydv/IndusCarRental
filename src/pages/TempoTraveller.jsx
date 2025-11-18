@@ -68,11 +68,11 @@ export default function TempoTraveller() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white text-slate-800">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-white text-slate-800">
       <TopBar onLogoClick={() => navigate("/")} />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-sky-600 to-sky-800 text-white">
+      <section className="relative bg-gradient-to-r from-purple-600 to-purple-800 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }} 
@@ -82,7 +82,7 @@ export default function TempoTraveller() {
           >
             <Bus className="h-16 w-16 mx-auto mb-4" />
             <h1 className="text-3xl md:text-5xl font-extrabold">TEMPO TRAVELLERS & MINIBUSES</h1>
-            <p className="mt-4 text-lg text-sky-100 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg text-purple-100 max-w-3xl mx-auto">
               Best Solution for Group Travel - Comfortable, Safe, and Affordable
             </p>
           </motion.div>
@@ -124,12 +124,12 @@ export default function TempoTraveller() {
           >
             <Card>
               <CardHeader>
-                <CardTitle className="text-sky-700">Tempo Traveller Prices</CardTitle>
+                <CardTitle className="text-purple-700">Tempo Traveller Prices</CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="overflow-hidden rounded-lg border">
                   <table className="w-full">
-                    <thead className="bg-sky-50">
+                    <thead className="bg-purple-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">City Name</th>
                         <th className="px-4 py-3 text-right text-sm font-semibold text-slate-700">Starting From</th>
@@ -139,7 +139,7 @@ export default function TempoTraveller() {
                       {tempoRates.map((item, idx) => (
                         <tr key={idx} className="hover:bg-slate-50">
                           <td className="px-4 py-3 text-slate-600">{item.city}</td>
-                          <td className="px-4 py-3 text-right font-semibold text-sky-700">{item.rate}</td>
+                          <td className="px-4 py-3 text-right font-semibold text-purple-700">{item.rate}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -157,12 +157,12 @@ export default function TempoTraveller() {
           >
             <Card>
               <CardHeader>
-                <CardTitle className="text-sky-700">Minibus Rental Prices</CardTitle>
+                <CardTitle className="text-purple-700">Minibus Rental Prices</CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="overflow-hidden rounded-lg border">
                   <table className="w-full">
-                    <thead className="bg-sky-50">
+                    <thead className="bg-purple-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700">City Name</th>
                         <th className="px-4 py-3 text-right text-sm font-semibold text-slate-700">Starting From</th>
@@ -172,7 +172,7 @@ export default function TempoTraveller() {
                       {minibusRates.map((item, idx) => (
                         <tr key={idx} className="hover:bg-slate-50">
                           <td className="px-4 py-3 text-slate-600">{item.city}</td>
-                          <td className="px-4 py-3 text-right font-semibold text-sky-700">{item.rate}</td>
+                          <td className="px-4 py-3 text-right font-semibold text-purple-700">{item.rate}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -199,7 +199,7 @@ export default function TempoTraveller() {
             <div className="grid md:grid-cols-2 gap-4">
               {idealFor.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-sky-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
                   <span className="text-slate-600">{item}</span>
                 </div>
               ))}
@@ -213,7 +213,7 @@ export default function TempoTraveller() {
       </section>
 
       {/* Key Features */}
-      <section className="mx-auto max-w-7xl px-4 py-12 bg-gradient-to-b from-white to-sky-50">
+      <section className="mx-auto max-w-7xl px-4 py-12 bg-gradient-to-b from-white to-purple-50">
         <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-8">
           WHY CHOOSE INDUS CAR RENTAL?
         </h2>
@@ -229,7 +229,7 @@ export default function TempoTraveller() {
             >
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
-                  <div className="rounded-full bg-sky-50 w-12 h-12 flex items-center justify-center text-sky-600 mb-4">
+                  <div className="rounded-full bg-purple-50 w-12 h-12 flex items-center justify-center text-purple-600 mb-4">
                     {feature.icon}
                   </div>
                   <h3 className="font-bold text-lg mb-2 text-slate-800">{feature.title}</h3>
@@ -245,13 +245,13 @@ export default function TempoTraveller() {
       <section className="mx-auto max-w-7xl px-4 py-12">
         <Card>
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold text-sky-700 mb-6">
+            <h2 className="text-2xl font-bold text-purple-700 mb-6">
               Benefits of Choosing Our Services
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
               {benefits.map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-sky-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
                   <span className="text-slate-600">{benefit}</span>
                 </div>
               ))}
@@ -274,7 +274,7 @@ export default function TempoTraveller() {
           >
             <Card className="h-full">
               <CardHeader>
-                <CardTitle className="text-sky-700 flex items-center gap-2">
+                <CardTitle className="text-purple-700 flex items-center gap-2">
                   <Calendar className="h-6 w-6" />
                   Local Hourly Rentals
                 </CardTitle>
@@ -295,7 +295,7 @@ export default function TempoTraveller() {
           >
             <Card className="h-full">
               <CardHeader>
-                <CardTitle className="text-sky-700 flex items-center gap-2">
+                <CardTitle className="text-purple-700 flex items-center gap-2">
                   <Bus className="h-6 w-6" />
                   Roundtrip Services
                 </CardTitle>
@@ -311,7 +311,7 @@ export default function TempoTraveller() {
       </section>
 
       {/* Premium Features */}
-      <section className="mx-auto max-w-7xl px-4 py-12 bg-sky-50 rounded-3xl">
+      <section className="mx-auto max-w-7xl px-4 py-12 bg-purple-50 rounded-3xl">
         <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-6">
           PREMIUM AMENITIES
         </h2>
@@ -331,7 +331,7 @@ export default function TempoTraveller() {
             "Generous Boot Capacity"
           ].map((amenity, idx) => (
             <div key={idx} className="bg-white rounded-lg p-4 text-center shadow-sm">
-              <CheckCircle className="h-6 w-6 text-sky-600 mx-auto mb-2" />
+              <CheckCircle className="h-6 w-6 text-purple-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-slate-700">{amenity}</p>
             </div>
           ))}
@@ -340,17 +340,17 @@ export default function TempoTraveller() {
 
       {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-4 py-12">
-        <Card className="bg-gradient-to-r from-sky-600 to-sky-800 text-white border-0">
+        <Card className="bg-gradient-to-r from-purple-600 to-purple-800 text-white border-0">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Ready to Book Your Group Travel?
             </h2>
-            <p className="text-sky-100 mb-6 max-w-2xl mx-auto">
+            <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
               Enjoy the best travel experience in our chauffeur-driven tempo travellers and minibuses. Focus on your journey while we handle the driving and navigation.
             </p>
             <button
               onClick={() => navigate("/")}
-              className="bg-white text-sky-700 hover:bg-sky-50 px-8 py-3 rounded-lg font-semibold transition"
+              className="bg-white text-purple-700 hover:bg-purple-50 px-8 py-3 rounded-lg font-semibold transition"
             >
               Book Now
             </button>
@@ -371,13 +371,13 @@ function TopBar({ onLogoClick }) {
     <header className="sticky top-0 z-30 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
         <button onClick={onLogoClick} className="flex items-center gap-2">
-          <div className="bg-sky-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
+          <div className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
           <span className="hidden md:inline text-xs text-slate-500">India's top rated cab service</span>
         </button>
         <nav className="flex items-center gap-6 text-sm">
-          <button onClick={onLogoClick} className="hover:text-sky-700">Home</button>
-          <button onClick={() => navigate("/about")} className="hover:text-sky-700">About</button>
-          <button onClick={() => navigate("/contact")} className="hover:text-sky-700">Contact</button>
+          <button onClick={onLogoClick} className="hover:text-purple-700">Home</button>
+          <button onClick={() => navigate("/about")} className="hover:text-purple-700">About</button>
+          <button onClick={() => navigate("/contact")} className="hover:text-purple-700">Contact</button>
         </nav>
       </div>
     </header>
@@ -386,15 +386,15 @@ function TopBar({ onLogoClick }) {
 
 function Footer({ onNavigate }) {
   return (
-    <footer className="bg-sky-700 text-white mt-8">
+    <footer className="bg-purple-700 text-white mt-8">
       <div className="mx-auto max-w-7xl px-4 py-12 grid sm:grid-cols-4 gap-8">
         <div>
           <div className="text-lg font-bold">Indus Car Rental</div>
-          <p className="mt-2 text-sm text-sky-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
+          <p className="mt-2 text-sm text-purple-100/90">© {new Date().getFullYear()} Indus Car Rental. All rights reserved.</p>
         </div>
         <div>
           <div className="font-semibold">Company</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => onNavigate("/about")} className="hover:text-white">About Us</button></li>
             <li>Careers</li>
             <li><button onClick={() => onNavigate("/privacy-policy")} className="hover:text-white">Privacy Policy</button></li>
@@ -403,13 +403,13 @@ function Footer({ onNavigate }) {
         </div>
         <div>
           <div className="font-semibold">Services</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => onNavigate("/tempo-traveller")} className="hover:text-white">Tempo Travellers & Minibuses</button></li>
           </ul>
         </div>
         <div>
           <div className="font-semibold">Get in touch</div>
-          <ul className="mt-2 space-y-1 text-sm text-sky-100/90">
+          <ul className="mt-2 space-y-1 text-sm text-purple-100/90">
             <li><button onClick={() => onNavigate("/contact")} className="hover:text-white">Contact</button></li>
             <li>Travel Agent</li>
             <li>Sitemap</li>
