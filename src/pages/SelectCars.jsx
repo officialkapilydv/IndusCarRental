@@ -1,69 +1,73 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { readQuery, buildQuery } from "../lib/query";
-
-const cars = [
-  {
-    id: "wagonr",
-    name: "Wagon R",
-    subtitle: "or equivalent | 4 seater AC Cab",
-    img: "https://www.savaari.com/assets/img/cars/indica.png",
-    perks: [
-      { icon: "👨‍✈️", text: "Driver allowance included" },
-      { icon: "🧭", text: "30 kms included | Post limit: ₹15.75/km" },
-    ],
-    price: 532,
-    strike: 590,
-    discount: "10% OFF",
-    extra: "+ ₹312 Charges and Taxes",
-    ribbons: ["New Car Promise - Model that is 2022 or newer @ ₹249"],
-  },
-  {
-    id: "etios",
-    name: "Toyota Etios",
-    subtitle: "or equivalent | 4 seater AC Cab",
-    img: "https://www.savaari.com/assets/img/cars/toyota_etios.png",
-    perks: [
-      { icon: "👨‍✈️", text: "Driver allowance included" },
-      { icon: "🧭", text: "30 kms included | Post limit: ₹15.75/km" },
-    ],
-    price: 548,
-    strike: 608,
-    discount: "10% OFF",
-    extra: "+ ₹313 Charges and Taxes",
-    ribbons: ["New Car Promise - Model that is 2022 or newer @ ₹249", "Cab with Luggage Carrier @ ₹249"],
-  },
-  {
-    id: "ertiga",
-    name: "Ertiga",
-    subtitle: "or equivalent | 6 seater AC Cab",
-    img: "https://www.savaari.com/assets/img/cars/ertiga.png",
-    perks: [
-      { icon: "👨‍✈️", text: "Driver allowance included" },
-      { icon: "🧭", text: "30 kms included | Post limit: ₹17.5/km" },
-    ],
-    price: 1028,
-    strike: 1125,
-    discount: "9% OFF",
-    extra: "+ ₹343 Charges and Taxes",
-    ribbons: ["New Car Promise - Model that is 2022 or newer @ ₹799"],
-  },
-];
+import { getCarsWithPricing } from "../lib/distanceService";
 
 export default function SelectCars() {
   const { search } = useLocation();
   const q = useMemo(() => readQuery(search), [search]);
+  const nav = useNavigate();
 
-  const nav = useNavigate();                                // ⬅️ init navigator
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [distanceInfo, setDistanceInfo] = useState(null);
+  const [error, setError] = useState(null);
 
-  // when user clicks "SELECT CAR"
-  function goToBooking(car) {                               // ⬅️ handler
+  useEffect(() => {
+    async function loadCarsWithPricing() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        let from = q.from;
+        let to = q.to;
+
+        // Handle different trip types
+        if (q.tab === "local") {
+          from = q.localCity;
+          to = q.localCity;
+        } else if (q.tab === "airport") {
+          from = q.pickupAddress || "Gurugram";
+          to = q.airportName || "Delhi Airport";
+        }
+
+        if (!from || !to) {
+          setError("Please select pickup and drop locations");
+          setLoading(false);
+          return;
+        }
+
+        // Get cars with dynamic pricing
+        const result = await getCarsWithPricing(from, to, q.tab || "oneway");
+        
+        setCars(result.cars);
+        setDistanceInfo({
+          distance: result.distance,
+          duration: result.duration,
+          estimated: result.estimated
+        });
+      } catch (err) {
+        console.error("Error loading cars:", err);
+        setError("Unable to calculate pricing. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCarsWithPricing();
+  }, [q.from, q.to, q.tab, q.localCity, q.pickupAddress, q.airportName]);
+
+  function goToBooking(car) {
     const params = {
-      ...q,                          // all current search params from the Select Cars page
+      ...q,
       carId: car.id,
       carName: car.name,
       carPrice: car.price,
-      carKms: 30,                    // mock included kms; adjust if you have real data
+      carKms: car.distance,
+      baseFare: car.baseFare,
+      taxes: car.taxes,
+      distance: car.distance,
+      driverAllowance: car.driverAllowance,
     };
     nav(`/booking?${buildQuery(params)}`);
   }
@@ -95,7 +99,7 @@ export default function SelectCars() {
       {/* summary strip */}
       <div className="mx-auto max-w-7xl px-4 mt-3">
         <div className="bg-purple-50 border rounded-xl p-4 flex items-center justify-between">
-          <div className="grid grid-cols-3 gap-6 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
             <div>
               <div className="text-slate-500">Trip Type</div>
               <div className="font-semibold capitalize">{q.tab || "oneway"}</div>
@@ -108,12 +112,21 @@ export default function SelectCars() {
               <div className="text-slate-500">Time</div>
               <div className="font-semibold">{formatTime(q.time) || "-"}</div>
             </div>
+            {distanceInfo && (
+              <div>
+                <div className="text-slate-500">Distance</div>
+                <div className="font-semibold">
+                  {distanceInfo.distance} km
+                  {distanceInfo.estimated && <span className="text-xs text-slate-400"> (est.)</span>}
+                </div>
+              </div>
+            )}
           </div>
           <Link
             to={{ pathname: "/", search }}
             className="text-purple-700 text-sm font-semibold bg-white border rounded-full px-3 py-1 hover:bg-purple-100"
           >
-            Modify Booking
+            Modify
           </Link>
         </div>
       </div>
@@ -121,67 +134,114 @@ export default function SelectCars() {
       {/* banner */}
       <div className="mx-auto max-w-7xl px-4 mt-4">
         <div className="bg-purple-600 text-white rounded-md px-6 py-3 text-sm grid sm:grid-cols-3 gap-3">
-          <div>₹ Book Now at Zero Cost</div>
-          <div>🛟 Free Cancellations Upto 1 Hour</div>
+          <div>💰 Transparent Pricing</div>
+          <div>🛟 Free Cancellations Up to 1 Hour</div>
           <div>📞 24x7 Customer Support</div>
         </div>
       </div>
 
+      {/* Loading state */}
+      {loading && (
+        <div className="mx-auto max-w-7xl px-4 my-12 text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <p className="mt-4 text-slate-600">Calculating best prices for you...</p>
+        </div>
+      )}
+
+      {/* Error state */}
+      {error && (
+        <div className="mx-auto max-w-7xl px-4 my-12">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-700 font-semibold">{error}</p>
+            <Link to="/" className="mt-4 inline-block text-purple-600 hover:underline">
+              Go back to search
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* car list */}
-      <div className="mx-auto max-w-7xl px-4 my-6 space-y-5">
-        {cars.map((car) => (
-          <div key={car.id} className="bg-white border rounded-xl shadow-sm">
-            <div className="flex flex-col md:flex-row gap-4 p-4">
-              <img
-                src={car.img}
-                alt={car.name}
-                className="w-44 h-28 object-cover rounded-md self-center md:self-start"
-              />
-              <div className="flex-1">
-                <div className="text-lg font-bold">
-                  {car.name}{" "}
-                  <span className="ml-1 text-xs bg-slate-100 px-1.5 py-0.5 rounded">4.5 ★</span>
+      {!loading && !error && cars.length > 0 && (
+        <div className="mx-auto max-w-7xl px-4 my-6 space-y-5">
+          {cars.map((car) => (
+            <div key={car.id} className="bg-white border rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex flex-col md:flex-row gap-4 p-4">
+                <img
+                  src={car.img}
+                  alt={car.name}
+                  className="w-44 h-28 object-cover rounded-md self-center md:self-start"
+                />
+                <div className="flex-1">
+                  <div className="text-lg font-bold">
+                    {car.name}{" "}
+                    <span className="ml-1 text-xs bg-slate-100 px-1.5 py-0.5 rounded">4.5 ★</span>
+                  </div>
+                  <div className="text-xs text-slate-500">{car.subtitle}</div>
+                  <ul className="mt-2 text-sm text-slate-700 space-y-1">
+                    {car.perks.map((p, i) => (
+                      <li key={i}>
+                        {p.icon} {p.text}
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  {/* Fare Breakdown Preview */}
+                  <div className="mt-3 text-xs text-slate-500 bg-slate-50 rounded p-2">
+                    <div className="flex justify-between">
+                      <span>Base Fare:</span>
+                      <span>₹{car.baseFare}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Driver Allowance:</span>
+                      <span>₹{car.driverAllowance}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Taxes (GST):</span>
+                      <span>₹{car.taxes}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-slate-500">{car.subtitle}</div>
-                <ul className="mt-2 text-sm text-slate-700 space-y-1">
-                  {car.perks.map((p, i) => (
-                    <li key={i}>
-                      {p.icon} {p.text}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-2">
-                  <button className="text-purple-700 text-sm">Inclusions and Exclusions ▾</button>
+
+                <div className="w-full md:w-48 text-right md:text-left">
+                  <div className="text-emerald-600 text-xs font-semibold mb-1">
+                    📍 {car.distance} km trip
+                  </div>
+                  <div className="text-3xl font-extrabold text-purple-700 leading-tight">
+                    ₹{car.price.toLocaleString("en-IN")}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">All inclusive</div>
+
+                  <button
+                    className="mt-3 bg-[#9333ea] hover:bg-[#7e22ce] text-white font-semibold px-4 py-2 rounded-md w-full transition"
+                    onClick={() => goToBooking(car)}
+                  >
+                    SELECT CAR
+                  </button>
                 </div>
               </div>
 
-              <div className="w-full md:w-48 text-right md:text-left">
-                <div className="text-emerald-600 text-xs font-semibold">
-                  {car.discount} <span className="line-through text-slate-400">₹{car.strike}</span>
-                </div>
-                <div className="text-3xl font-extrabold text-purple-700 leading-tight">
-                  ₹{car.price.toLocaleString("en-IN")}
-                </div>
-                <div className="text-xs text-slate-500">{car.extra}</div>
-
-                {/* ⬇️ navigate to /booking with all params + car details */}
-                <button
-                  className="mt-3 bg-[#9333ea] hover:bg-[#7e22ce] text-white font-semibold px-4 py-2 rounded-md w-full"
-                  onClick={() => goToBooking(car)}
-                >
-                  SELECT CAR
-                </button>
+              <div className="text-purple-800 bg-purple-50 border-t px-4 py-2 text-xs rounded-b-xl">
+                ✓ Distance-based pricing | ✓ No hidden charges | ✓ Transparent billing
               </div>
             </div>
+          ))}
+        </div>
+      )}
 
-            {car.ribbons?.map((r, i) => (
-              <div key={i} className="text-purple-800 bg-purple-50 border-t px-4 py-2 text-xs rounded-b-xl">
-                {r}
-              </div>
-            ))}
+      {/* Pricing Disclaimer */}
+      {!loading && !error && (
+        <div className="mx-auto max-w-7xl px-4 my-6">
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+            <p className="font-semibold mb-2">📌 Important Notes:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>State/RTO tax and toll charges will be charged extra</li>
+              <li>Minimum 250 km per day charged for outstation trips</li>
+              <li>Cancellation charges: ₹1000 if cancelled after booking</li>
+              <li>Prices subject to change based on actual route and traffic conditions</li>
+            </ul>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,3 +1,5 @@
+// Booking.js file with autocomplete feature 
+
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { readQuery } from "../lib/query";
@@ -74,12 +76,17 @@ export default function Booking() {
   const { search } = useLocation();
   const q = useMemo(() => readQuery(search), [search]);
 
-  const baseFare = Number(q.carPrice || 0);
+  // FIX: Use the correct base fare and taxes from query params
+  const baseFare = Number(q.baseFare || 0);
+  const taxAmount = Number(q.taxes || 0);
+  const driverAllowance = Number(q.driverAllowance || 0);
+  
   const [step, setStep] = useState(1);
   const [activeTab, setActiveTab] = useState("incl");
 
   const [selectedServices, setSelectedServices] = useState([]);
-  const [totalFare, setTotalFare] = useState(baseFare + Math.round(baseFare * 0.6));
+  // FIX: Initialize with correct total (base + driver allowance + taxes)
+  const [totalFare, setTotalFare] = useState(baseFare + driverAllowance + taxAmount);
   const [toast, setToast] = useState(null);
 
   const routeTitle =
@@ -117,6 +124,8 @@ export default function Booking() {
                 onBack={() => setStep(1)}
                 onNext={() => setStep(3)}
                 baseFare={baseFare}
+                driverAllowance={driverAllowance}
+                taxAmount={taxAmount}
                 setTotalFare={setTotalFare}
                 setSelectedServices={setSelectedServices}
                 setToast={setToast}
@@ -128,6 +137,8 @@ export default function Booking() {
                 totalFare={totalFare}
                 selectedServices={selectedServices}
                 baseFare={baseFare}
+                taxAmount={taxAmount}
+                driverAllowance={driverAllowance}
               />
             )}
           </div>
@@ -137,6 +148,8 @@ export default function Booking() {
             q={q}
             routeTitle={routeTitle}
             baseFare={baseFare}
+            taxAmount={taxAmount}
+            driverAllowance={driverAllowance}
             totalFare={totalFare}
             selectedServices={selectedServices}
             activeTab={activeTab}
@@ -150,9 +163,165 @@ export default function Booking() {
 }
 
 /* -------------------------------------------------------
+   Location Autocomplete Component
+------------------------------------------------------- */
+function LocationAutocomplete({ value, onChange, placeholder }) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef(null);
+  const autocompleteService = useRef(null);
+
+  useEffect(() => {
+    loadGoogleMapsScript();
+  }, []);
+
+  const loadGoogleMapsScript = async () => {
+    if (window.google?.maps) return;
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      console.error("Google Maps API key not found");
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        const checkInterval = setInterval(() => {
+          if (window.google?.maps) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  const handleInputChange = async (e) => {
+    const inputValue = e.target.value;
+    onChange(inputValue);
+
+    if (!inputValue.trim()) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await loadGoogleMapsScript();
+
+      if (!autocompleteService.current && window.google?.maps) {
+        autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      }
+
+      if (!autocompleteService.current) {
+        console.error("Autocomplete service not available");
+        setLoading(false);
+        return;
+      }
+
+      autocompleteService.current.getPlacePredictions(
+        {
+          input: inputValue,
+          componentRestrictions: { country: "in" },
+          types: ["geocode", "establishment"],
+        },
+        (predictions, status) => {
+          setLoading(false);
+          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+            setSuggestions(predictions);
+            setShowSuggestions(true);
+          } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleSelectSuggestion = (suggestion) => {
+    onChange(suggestion.description);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+  return (
+    <div className="relative">
+      <input
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={handleInputChange}
+        onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+        placeholder={placeholder}
+        className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
+      />
+
+      {loading && (
+        <div className="absolute right-3 top-3">
+          <div className="animate-spin h-4 w-4 border-2 border-purple-600 border-t-transparent rounded-full"></div>
+        </div>
+      )}
+
+      {showSuggestions && suggestions.length > 0 && (
+        <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
+          {suggestions.map((suggestion) => (
+            <button
+              key={suggestion.place_id}
+              onClick={() => handleSelectSuggestion(suggestion)}
+              className="w-full text-left px-4 py-2 hover:bg-purple-50 border-b last:border-b-0 transition-colors"
+            >
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-1">📍</span>
+                <div className="flex-1">
+                  <div className="font-medium text-sm text-slate-800">
+                    {suggestion.structured_formatting.main_text}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {suggestion.structured_formatting.secondary_text}
+                  </div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------
    Step 1: Contact Form
 ------------------------------------------------------- */
 function StepContact({ onNext }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [pickup, setPickup] = useState("");
+  const [drop, setDrop] = useState("");
+
+  const handleSubmit = () => {
+    if (!name || !email || !phone || !pickup || !drop) {
+      alert("Please fill all fields");
+      return;
+    }
+    onNext();
+  };
+
   return (
     <>
       <div className="text-center text-lg font-semibold mb-4">
@@ -162,6 +331,8 @@ function StepContact({ onNext }) {
       <div className="space-y-5">
         <Field label="NAME">
           <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Enter your name"
             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
@@ -170,6 +341,8 @@ function StepContact({ onNext }) {
         <Field label="EMAIL">
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
@@ -181,6 +354,8 @@ function StepContact({ onNext }) {
               <option>India (+91)</option>
             </select>
             <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="Enter phone number"
               className="flex-1 border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
             />
@@ -188,21 +363,23 @@ function StepContact({ onNext }) {
         </Field>
 
         <Field label="PICKUP">
-          <input
-            placeholder="Enter pickup location"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
+          <LocationAutocomplete
+            value={pickup}
+            onChange={setPickup}
+            placeholder="Search pickup location"
           />
         </Field>
 
         <Field label="DROP">
-          <input
-            placeholder="Enter drop location"
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
+          <LocationAutocomplete
+            value={drop}
+            onChange={setDrop}
+            placeholder="Search drop location"
           />
         </Field>
 
         <button
-          onClick={onNext}
+          onClick={handleSubmit}
           className="w-full bg-[#9333ea] hover:bg-[#7e22ce] text-white font-semibold rounded-md py-3"
         >
           PROCEED
@@ -215,9 +392,9 @@ function StepContact({ onNext }) {
 /* -------------------------------------------------------
    Step 2: Special Services
 ------------------------------------------------------- */
-function StepServices({ onBack, onNext, baseFare, setTotalFare, setSelectedServices, setToast }) {
+function StepServices({ onBack, onNext, baseFare, driverAllowance, taxAmount, setTotalFare, setSelectedServices, setToast }) {
   const [selected, setSelected] = useState([]);
-  const [langPref, setLangPref] = useState("english"); // language radio selection
+  const [langPref, setLangPref] = useState("english");
 
   const services = [
     {
@@ -230,7 +407,7 @@ function StepServices({ onBack, onNext, baseFare, setTotalFare, setSelectedServi
       id: "lang",
       title: "Chauffeurs who know your language",
       price: 199,
-      desc: "Choose your preferred language & we’ll assign a conversant driver for your comfort.",
+      desc: "Choose your preferred language & we'll assign a conversant driver for your comfort.",
       hasDropdown: true,
     },
     {
@@ -255,8 +432,10 @@ function StepServices({ onBack, onNext, baseFare, setTotalFare, setSelectedServi
       }
 
       const selectedDetails = services.filter((s) => newSelected.includes(s.id));
-      const total = selectedDetails.reduce((sum, s) => sum + s.price, 0);
-      setTotalFare(baseFare + Math.round(baseFare * 0.6) + total);
+      const servicesTotal = selectedDetails.reduce((sum, s) => sum + s.price, 0);
+      
+      // FIX: Include driver allowance in total calculation
+      setTotalFare(baseFare + driverAllowance + taxAmount + servicesTotal);
       setSelectedServices(selectedDetails);
       setTimeout(() => setToast(null), 1200);
       return newSelected;
@@ -341,7 +520,7 @@ function StepServices({ onBack, onNext, baseFare, setTotalFare, setSelectedServi
 /* -------------------------------------------------------
    Step 3: Payment
 ------------------------------------------------------- */
-function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
+function StepPayment({ onBack, totalFare, selectedServices, baseFare, taxAmount, driverAllowance }) {
   const [payNow, setPayNow] = useState(25);
   const [gst, setGst] = useState(false);
   const [company, setCompany] = useState("");
@@ -364,16 +543,30 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
       <div className="border rounded-md p-4 mb-4 bg-purple-50">
         <div className="font-semibold text-slate-700 mb-2">Fare Breakdown</div>
         <div className="text-sm space-y-1">
-          <div className="flex justify-between"><span>Base Fare</span><span>₹{baseFare}</span></div>
-          <div className="flex justify-between"><span>Taxes </span><span>₹{Math.round(baseFare * 0.6)}</span></div>
+          <div className="flex justify-between">
+            <span>Base Fare</span>
+            <span>₹{baseFare}</span>
+          </div>
+          {driverAllowance > 0 && (
+            <div className="flex justify-between">
+              <span>Driver Allowance</span>
+              <span>₹{driverAllowance}</span>
+            </div>
+          )}
+          <div className="flex justify-between">
+            <span>Taxes (GST)</span>
+            <span>₹{taxAmount}</span>
+          </div>
           {selectedServices.map((s) => (
             <div key={s.id} className="flex justify-between">
-              <span>+ {s.title.split(" - ")[0]}</span><span>₹{s.price}</span>
+              <span>+ {s.title.split(" - ")[0]}</span>
+              <span>₹{s.price}</span>
             </div>
           ))}
           <hr className="my-2 border-slate-300" />
           <div className="flex justify-between font-semibold text-purple-700">
-            <span>Total Fare</span><span>₹{animatedFare.toLocaleString("en-IN")}</span>
+            <span>Total Fare</span>
+            <span>₹{animatedFare.toLocaleString("en-IN")}</span>
           </div>
         </div>
       </div>
@@ -427,7 +620,7 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare }) {
 /* -------------------------------------------------------
    Right Panel Summary
 ------------------------------------------------------- */
-function RightSummary({ q, routeTitle, baseFare, totalFare, selectedServices, activeTab, setActiveTab, toast }) {
+function RightSummary({ q, routeTitle, baseFare, taxAmount, driverAllowance, totalFare, selectedServices, activeTab, setActiveTab, toast }) {
   const animatedFare = useAnimatedNumber(totalFare);
 
   return (
@@ -443,8 +636,20 @@ function RightSummary({ q, routeTitle, baseFare, totalFare, selectedServices, ac
       </div>
 
       <div className="px-6 pb-4 text-sm text-slate-700 border-t">
-        <div className="flex justify-between"><span>Base Fare</span><span>₹{baseFare}</span></div>
-        <div className="flex justify-between"><span>Taxes </span><span>₹{Math.round(baseFare * 0.6)}</span></div>
+        <div className="flex justify-between">
+          <span>Base Fare</span>
+          <span>₹{baseFare}</span>
+        </div>
+        {driverAllowance > 0 && (
+          <div className="flex justify-between">
+            <span>Driver Allowance</span>
+            <span>₹{driverAllowance}</span>
+          </div>
+        )}
+        <div className="flex justify-between">
+          <span>Taxes (GST)</span>
+          <span>₹{taxAmount}</span>
+        </div>
 
         {selectedServices.length > 0 && (
           <>

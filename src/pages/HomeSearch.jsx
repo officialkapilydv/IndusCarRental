@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -323,33 +323,144 @@ function TimeInput({ value, onChange }) {
 function CitySelect({ value, onChange }) {
   const [q, setQ] = useState(value);
   const [open, setOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const autocompleteService = useRef(null);
 
-  const matches = useMemo(() => {
-    const s = (q || "").trim().toLowerCase();
-    if (!s) return cities;
-    return cities.filter((c) => c.toLowerCase().includes(s)).slice(0, 6);
-  }, [q]);
+  // Load Google Maps script
+  useEffect(() => {
+    loadGoogleMapsScript();
+  }, []);
 
-  const showList = open && q && !(matches.length === 1 && matches[0].toLowerCase() === (q || "").trim().toLowerCase());
+  const loadGoogleMapsScript = async () => {
+    if (window.google?.maps) return;
 
-  const selectItem = (m) => { onChange(m); setQ(m); setOpen(false); };
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      console.error("Google Maps API key not found");
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        const checkInterval = setInterval(() => {
+          if (window.google?.maps) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  const handleInputChange = async (e) => {
+    const inputValue = e.target.value;
+    setQ(inputValue);
+    setOpen(true);
+
+    if (!inputValue.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await loadGoogleMapsScript();
+
+      if (!autocompleteService.current && window.google?.maps) {
+        autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      }
+
+      if (!autocompleteService.current) {
+        console.error("Autocomplete service not available");
+        setLoading(false);
+        return;
+      }
+
+      autocompleteService.current.getPlacePredictions(
+        {
+          input: inputValue,
+          componentRestrictions: { country: "in" },
+          types: ["(cities)"],
+        },
+        (predictions, status) => {
+          setLoading(false);
+          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+            setSuggestions(predictions);
+          } else {
+            setSuggestions([]);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      setLoading(false);
+    }
+  };
+
+  const selectItem = (suggestion) => {
+    const cityName = suggestion.structured_formatting.main_text;
+    onChange(cityName);
+    setQ(cityName);
+    setSuggestions([]);
+    setOpen(false);
+  };
+
+  const showList = open && q && suggestions.length > 0;
 
   return (
     <div className="relative">
       <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><MapPin className="h-4 w-4" /></div>
       <input
         className="w-full rounded-lg border pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
-        placeholder="Search city" value={q || ""}
+        placeholder="Search city" 
+        value={q || ""}
         onFocus={() => setOpen(true)}
-        onChange={(e) => { setQ(e.target.value); setOpen(true); }}
-        onBlur={() => { setTimeout(() => setOpen(false), 100); if (q && q !== value) onChange(q); }}
+        onChange={handleInputChange}
+        onBlur={() => { 
+          setTimeout(() => {
+            setOpen(false);
+            if (q && q !== value) onChange(q);
+          }, 200);
+        }}
       />
+      {loading && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="animate-spin h-4 w-4 border-2 border-purple-600 border-t-transparent rounded-full"></div>
+        </div>
+      )}
       {showList && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border bg-white shadow max-h-56 overflow-auto">
-          {matches.map((m) => (
-            <button key={m} type="button" className="w-full text-left px-3 py-2 hover:bg-slate-50"
-              onMouseDown={(e) => { e.preventDefault(); selectItem(m); }}>
-              {m}
+        <div className="absolute z-10 mt-1 w-full rounded-lg border bg-white shadow-lg max-h-56 overflow-auto">
+          {suggestions.map((suggestion) => (
+            <button 
+              key={suggestion.place_id} 
+              type="button" 
+              className="w-full text-left px-3 py-2 hover:bg-purple-50 border-b last:border-b-0 transition-colors"
+              onMouseDown={(e) => { 
+                e.preventDefault(); 
+                selectItem(suggestion); 
+              }}
+            >
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">📍</span>
+                <div className="flex-1">
+                  <div className="font-medium text-sm text-slate-800">
+                    {suggestion.structured_formatting.main_text}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {suggestion.structured_formatting.secondary_text}
+                  </div>
+                </div>
+              </div>
             </button>
           ))}
         </div>
