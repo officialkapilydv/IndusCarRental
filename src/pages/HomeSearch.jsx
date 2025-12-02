@@ -272,6 +272,7 @@ export default function HomeSearch() {
 // ---------- support components ----------
 function TopBar() {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
     <header className="sticky top-0 z-30 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
@@ -280,13 +281,75 @@ function TopBar() {
           <div className="bg-purple-600 text-white px-3 py-1 rounded-md font-bold tracking-wide">Indus Car Rental</div>
           <span className="hidden md:inline text-xs text-slate-500">India's top rated cab service</span>
         </div>
+        
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <a className="hover:text-purple-700 cursor-pointer" href="#services">Services</a>
           <a className="hover:text-purple-700 cursor-pointer" href="#why">Why us</a>
           <button onClick={() => navigate("/about")} className="hover:text-purple-700">About</button>
           <button onClick={() => navigate("/contact")} className="hover:text-purple-700">Contact</button>
+          <button 
+            onClick={() => navigate("/admin")} 
+            className="flex items-center gap-1 px-3 py-1.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-md font-medium transition"
+          >
+            🔐 Admin
+          </button>
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 hover:bg-slate-100 rounded-md"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {mobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t bg-white">
+          <nav className="px-4 py-4 space-y-3">
+            <a 
+              className="block py-2 hover:text-purple-700 cursor-pointer" 
+              href="#services"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Services
+            </a>
+            <a 
+              className="block py-2 hover:text-purple-700 cursor-pointer" 
+              href="#why"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Why us
+            </a>
+            <button 
+              onClick={() => { navigate("/about"); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 hover:text-purple-700"
+            >
+              About
+            </button>
+            <button 
+              onClick={() => { navigate("/contact"); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 hover:text-purple-700"
+            >
+              Contact
+            </button>
+            <button 
+              onClick={() => { navigate("/admin"); setMobileMenuOpen(false); }} 
+              className="flex items-center gap-2 w-full text-left py-2 px-3 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-md font-medium transition"
+            >
+              🔐 Admin
+            </button>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

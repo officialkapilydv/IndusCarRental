@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { readQuery } from "../lib/query";
+import { saveBookingToSheet } from "../lib/googleSheets";
 
 
 function useAnimatedNumber(target, duration = 600) {
@@ -84,6 +85,15 @@ export default function Booking() {
   const [step, setStep] = useState(1);
   const [activeTab, setActiveTab] = useState("incl");
 
+  // ADD THIS: Customer data state (lifted from StepContact)
+  const [customerData, setCustomerData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    pickup: "",
+    drop: ""
+  });
+
   const [selectedServices, setSelectedServices] = useState([]);
   // FIX: Initialize with correct total (base + driver allowance + taxes)
   const [totalFare, setTotalFare] = useState(baseFare + driverAllowance + taxAmount);
@@ -118,7 +128,13 @@ export default function Booking() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-3">
           {/* LEFT: Steps */}
           <div className="lg:col-span-2 bg-white rounded-xl border shadow-sm p-6">
-            {step === 1 && <StepContact onNext={() => setStep(2)} />}
+            {step === 1 && (
+              <StepContact 
+                onNext={() => setStep(2)} 
+                customerData={customerData}
+                setCustomerData={setCustomerData}
+              />
+            )}
             {step === 2 && (
               <StepServices
                 onBack={() => setStep(1)}
@@ -139,6 +155,8 @@ export default function Booking() {
                 baseFare={baseFare}
                 taxAmount={taxAmount}
                 driverAllowance={driverAllowance}
+                customerData={customerData}
+                q={q}
               />
             )}
           </div>
@@ -307,15 +325,10 @@ function LocationAutocomplete({ value, onChange, placeholder }) {
 /* -------------------------------------------------------
    Step 1: Contact Form
 ------------------------------------------------------- */
-function StepContact({ onNext }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [pickup, setPickup] = useState("");
-  const [drop, setDrop] = useState("");
-
+function StepContact({ onNext, customerData, setCustomerData }) {
   const handleSubmit = () => {
-    if (!name || !email || !phone || !pickup || !drop) {
+    if (!customerData.name || !customerData.email || !customerData.phone || 
+        !customerData.pickup || !customerData.drop) {
       alert("Please fill all fields");
       return;
     }
@@ -331,8 +344,8 @@ function StepContact({ onNext }) {
       <div className="space-y-5">
         <Field label="NAME">
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={customerData.name}
+            onChange={(e) => setCustomerData({...customerData, name: e.target.value})}
             placeholder="Enter your name"
             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
@@ -341,8 +354,8 @@ function StepContact({ onNext }) {
         <Field label="EMAIL">
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={customerData.email}
+            onChange={(e) => setCustomerData({...customerData, email: e.target.value})}
             placeholder="Enter your email"
             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
           />
@@ -354,8 +367,8 @@ function StepContact({ onNext }) {
               <option>India (+91)</option>
             </select>
             <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={customerData.phone}
+              onChange={(e) => setCustomerData({...customerData, phone: e.target.value})}
               placeholder="Enter phone number"
               className="flex-1 border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-600 outline-none"
             />
@@ -364,16 +377,16 @@ function StepContact({ onNext }) {
 
         <Field label="PICKUP">
           <LocationAutocomplete
-            value={pickup}
-            onChange={setPickup}
+            value={customerData.pickup}
+            onChange={(val) => setCustomerData({...customerData, pickup: val})}
             placeholder="Search pickup location"
           />
         </Field>
 
         <Field label="DROP">
           <LocationAutocomplete
-            value={drop}
-            onChange={setDrop}
+            value={customerData.drop}
+            onChange={(val) => setCustomerData({...customerData, drop: val})}
             placeholder="Search drop location"
           />
         </Field>
@@ -520,7 +533,7 @@ function StepServices({ onBack, onNext, baseFare, driverAllowance, taxAmount, se
 /* -------------------------------------------------------
    Step 3: Payment
 ------------------------------------------------------- */
-function StepPayment({ onBack, totalFare, selectedServices, baseFare, taxAmount, driverAllowance }) {
+function StepPayment({ onBack, totalFare, selectedServices, baseFare, taxAmount, driverAllowance, customerData, q }) {
   const [payNow, setPayNow] = useState(25);
   const [gst, setGst] = useState(false);
   const [company, setCompany] = useState("");
@@ -534,7 +547,71 @@ function StepPayment({ onBack, totalFare, selectedServices, baseFare, taxAmount,
     { v: 100, label: `100%\n₹${totalFare} now` },
   ];
 
-  const onBook = () => alert("Booking confirmed! 🎉");
+  const onBook = async () => {
+    try {
+      // Generate booking ID
+      const bookingId = `BK${Date.now()}`;
+      
+      // Prepare booking data for Google Sheets
+      const bookingData = {
+        // Row data in the order of your sheet columns
+        bookingId: bookingId,
+        timestamp: new Date().toLocaleString('en-IN'),
+        
+        // Customer Details
+        customerName: customerData.name,
+        customerEmail: customerData.email,
+        customerPhone: customerData.phone,
+        pickupLocation: customerData.pickup,
+        dropLocation: customerData.drop,
+        
+        // Trip Details
+        tripType: q.tab || "oneway",
+        fromCity: q.from || "",
+        toCity: q.to || "",
+        pickupDate: q.date || "",
+        pickupTime: q.time || "",
+        
+        // Car Details
+        carName: q.carName || "",
+        carDistance: q.carKms || 0,
+        
+        // Pricing Details
+        baseFare: baseFare,
+        driverAllowance: driverAllowance,
+        taxes: taxAmount,
+        selectedServices: selectedServices.map(s => s.title).join(', ') || 'None',
+        servicesTotal: selectedServices.reduce((sum, s) => sum + s.price, 0),
+        totalFare: totalFare,
+        
+        // Payment Details
+        paymentOption: payNow === 0 ? "Pay Later" : payNow === 25 ? "25%" : payNow === 50 ? "50%" : "100%",
+        amountPaidNow: Math.round(totalFare * (payNow / 100)),
+        amountPaidLater: totalFare - Math.round(totalFare * (payNow / 100)),
+        
+        // GST Details
+        hasGST: gst ? "Yes" : "No",
+        gstCompanyName: company || "-",
+        gstNumber: gstNo || "-",
+        
+        // Status
+        bookingStatus: "Confirmed",
+        paymentStatus: payNow === 100 ? "Paid" : "Partial"
+      };
+
+      // Save to Google Sheets
+      await saveBookingToSheet(bookingData);
+      
+      alert(`✅ Booking Confirmed!\n\nBooking ID: ${bookingId}\n\nYou will receive a confirmation email shortly.`);
+      
+      // Optionally redirect or reset form
+      // window.location.href = '/';
+      
+    } catch (error) {
+      console.error("Error saving booking:", error);
+      alert("❌ Failed to save booking. Please try again or contact support.");
+    }
+  };
 
   return (
     <>
