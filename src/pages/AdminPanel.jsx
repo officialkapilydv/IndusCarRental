@@ -140,17 +140,8 @@ export default function AdminPanel() {
         <div className="bg-purple-600 text-white shadow-lg">
         <div className="mx-auto max-w-7xl px-4 py-6">
             <div className="flex items-center justify-between">
-            {/* Left - Home Button */}
-            <button
-                onClick={() => navigate('/')}
-                className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 flex items-center gap-2 transition"
-                title="Go to Home"
-            >
-                🏠 Home
-            </button>
-
-            {/* Center - Title */}
-            <div className="flex-1 text-center mx-6">
+            {/* Left - Title */}
+            <div className="flex-1">
                 <h1 className="text-3xl font-bold">Admin Panel - Indus Car Rental</h1>
                 <p className="text-purple-100 mt-1">Data synced with Google Sheets</p>
             </div>
@@ -158,14 +149,26 @@ export default function AdminPanel() {
             {/* Right - Action Buttons */}
             <div className="flex items-center gap-3">
                 <button
-                onClick={openGoogleSheet}
-                className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 flex items-center gap-2"
+                onClick={() => navigate('/queries')}
+                className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 flex items-center gap-2 transition"
                 >
-                📊 Open Google Sheet
+                💬 Queries
+                </button>
+                <button
+                onClick={openGoogleSheet}
+                className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 flex items-center gap-2 transition"
+                >
+                📊 Google Sheet
+                </button>
+                <button
+                onClick={() => navigate('/')}
+                className="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 flex items-center gap-2 transition"
+                >
+                🏠 Home
                 </button>
                 <button
                 onClick={handleLogout}
-                className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
+                className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition"
                 >
                 🚪 Logout
                 </button>

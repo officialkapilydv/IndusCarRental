@@ -8,7 +8,8 @@ import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import TempoTraveller from "./pages/TempoTraveller";
-import AdminPanel from "./pages/AdminPanel"; // ADD THIS LINE
+import AdminPanel from "./pages/AdminPanel";
+import Queries from './pages/Queries';
 
 export default function App() {
   return (
@@ -21,7 +22,8 @@ export default function App() {
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms-conditions" element={<TermsAndConditions />} />
       <Route path="/tempo-traveller" element={<TempoTraveller />} />
-      <Route path="/admin" element={<AdminPanel />} /> {/* ADD THIS LINE */}
+      <Route path="/admin" element={<AdminPanel />} />
+      <Route path="/queries" element={<Queries />} />
     </Routes>
   );
 }

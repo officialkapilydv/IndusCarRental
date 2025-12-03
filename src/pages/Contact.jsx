@@ -28,7 +28,7 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      // Option 1: Using Web3Forms (easiest to set up)
+      // Send to Web3Forms
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
@@ -49,6 +49,33 @@ export default function Contact() {
       const result = await response.json();
 
       if (result.success) {
+        // SAVE TO LOCAL STORAGE FOR QUERIES PAGE
+        try {
+          const localQueries = JSON.parse(localStorage.getItem('contactQueries') || '[]');
+          const newQuery = {
+            id: Date.now(),
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            timestamp: new Date().toISOString(),
+            isRead: false
+          };
+          
+          // Add new query at the beginning
+          localQueries.unshift(newQuery);
+          
+          // Keep only last 100 queries to avoid storage limits
+          if (localQueries.length > 100) {
+            localQueries.pop();
+          }
+          
+          localStorage.setItem('contactQueries', JSON.stringify(localQueries));
+        } catch (storageError) {
+          console.error('Failed to save to localStorage:', storageError);
+          // Continue anyway - email was sent successfully
+        }
+        
         setSubmitStatus('success');
         setFormData({ name: "", email: "", phone: "", message: "" });
         
